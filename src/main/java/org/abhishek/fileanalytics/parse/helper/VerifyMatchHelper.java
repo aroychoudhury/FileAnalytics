@@ -1,11 +1,12 @@
 package org.abhishek.fileanalytics.parse.helper;
 
-import org.abhishek.fileanalytics.algos.KnuthMorrisPrattAlgo;
+import org.abhishek.fileanalytics.algo.StringMatcher;
+import org.abhishek.fileanalytics.algo.impl.KnuthMorrisPrattAlgo;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
 import org.abhishek.fileanalytics.parse.AbstractParseHelper;
 
 public class VerifyMatchHelper extends AbstractParseHelper<Boolean> {
-    private KnuthMorrisPrattAlgo matcher = null;
+    private StringMatcher matcher = null;
 
     public VerifyMatchHelper(String match) {
         super();

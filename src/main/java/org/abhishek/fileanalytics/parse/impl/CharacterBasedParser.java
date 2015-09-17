@@ -1,6 +1,7 @@
 package org.abhishek.fileanalytics.parse.impl;
 
-import org.abhishek.fileanalytics.algos.KnuthMorrisPrattAlgo;
+import org.abhishek.fileanalytics.algo.StringMatcher;
+import org.abhishek.fileanalytics.algo.impl.KnuthMorrisPrattAlgo;
 import org.abhishek.fileanalytics.constants.MatchTypes;
 import org.abhishek.fileanalytics.exception.ParseFailureException;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
@@ -38,8 +39,8 @@ public class CharacterBasedParser<E> extends AbstractParser<E> {
      */
     protected MatchTypes         matchType         = null;
 
-    private KnuthMorrisPrattAlgo startMatcher      = null;
-    private KnuthMorrisPrattAlgo endMatcher        = null;
+    private StringMatcher startMatcher      = null;
+    private StringMatcher endMatcher        = null;
 
     public CharacterBasedParser(String separator, MatchTypes matchType) {
         super();

@@ -1,6 +1,15 @@
-package org.abhishek.fileanalytics.algos;
+package org.abhishek.fileanalytics.algo.impl;
 
-public class KnuthMorrisPrattAlgo {
+import org.abhishek.fileanalytics.algo.StringMatcher;
+
+/**
+ * Inspired by http://algs4.cs.princeton.edu/53substring/KMPplus.java.
+ * Tutorial for this at https://www.youtube.com/watch?v=GTJr8OvyEVQ. 
+ * 
+ * @author abhishek
+ * @since  1.0
+ */
+public class KnuthMorrisPrattAlgo implements StringMatcher {
 	private char[] pattern;
 	private int[] next;
 
@@ -30,7 +39,13 @@ public class KnuthMorrisPrattAlgo {
 
 	// return offset of first occurrence of text in pattern (or N if no match)
 	// simulate the NFA to find match
-	public int search(char[] text, int searchFrom, int searchTo) {
+	/**
+     * @author abhishek
+     * @since  1.0
+     * @see org.abhishek.fileanalytics.algo.StringMatcher#search(char[], int, int)
+     */
+	@Override
+    public int search(char[] text, int searchFrom, int searchTo) {
 	    int patternLength = pattern.length;
         int txtLength = text.length;
 
@@ -54,6 +69,16 @@ public class KnuthMorrisPrattAlgo {
 		return searchTo;
 	}
 
+	/**
+     * @author abhishek
+     * @since  1.0
+     * @see org.abhishek.fileanalytics.algo.StringMatcher#matched(char[], int, int)
+     */
+	@Override
+    public boolean matched(char[] text, int searchFrom, int searchTo) {
+	    return (this.search(text, searchFrom, searchTo) != searchTo);
+	}
+
 	// test client
 	public static void main(String[] args) {
 		String pattern = "nab";
@@ -62,7 +87,7 @@ public class KnuthMorrisPrattAlgo {
 		int N = text.length();
 
 		// substring search
-		KnuthMorrisPrattAlgo kmp = new KnuthMorrisPrattAlgo(pattern.toCharArray());
+		StringMatcher kmp = new KnuthMorrisPrattAlgo(pattern.toCharArray());
 		int offset = kmp.search(text.toCharArray(), 20, -10);
 
 		// print results
