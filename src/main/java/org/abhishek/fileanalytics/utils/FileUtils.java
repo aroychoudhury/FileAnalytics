@@ -95,19 +95,44 @@ public class FileUtils {
         if (null == fileName || "".equals(fileName.trim())) {
             throw new IllegalArgumentException("File Name cannot be Null/Empty");
         }
-        logger.debug("File Name : {}.ser", fileName.toLowerCase());
-        return fileName.toLowerCase() + ".ser";
+        return serilizedFileName(fileName, "");
     }
 
     public static String serilizedFileName(String fileName, Date lastModified) {
-        if (null == fileName || "".equals(fileName.trim())) {
-            throw new IllegalArgumentException("File Name cannot be Null/Empty");
-        }
         if (null == lastModified) {
             throw new IllegalArgumentException("Last Modified cannot be Null");
         }
-        logger.debug("File Name : {}_{}.ser", fileName.toLowerCase(), DateUtils.format(lastModified, DateFormats.SIMPLE_CHAR_PATTERN, TimeZones.DEFAULT));
-        return fileName.toLowerCase() + "." + DateUtils.format(lastModified, DateFormats.SIMPLE_CHAR_PATTERN, TimeZones.DEFAULT) + ".ser";
+        return serilizedFileName(fileName, DateUtils.format(lastModified, DateFormats.SIMPLE_CHAR_PATTERN, TimeZones.DEFAULT));
+    }
+
+    public static String serilizedFileName(String fileName, String lastModifiedStr) {
+        if (null == fileName || "".equals(fileName.trim())) {
+            throw new IllegalArgumentException("File Name cannot be Null/Empty");
+        }
+        StringBuilder tmpBuilder = new StringBuilder(fileName.substring(0, fileName.indexOf(".")).toLowerCase());
+
+        if (null == lastModifiedStr) {
+            throw new IllegalArgumentException("Last Modified cannot be Null/Empty");
+        } else {
+            tmpBuilder
+                .append('.')
+                .append(lastModifiedStr);
+        }
+        tmpBuilder.append(".ser");
+
+        logger.debug("File Name : {}", tmpBuilder.toString());
+        return tmpBuilder.toString();
+    }
+
+    public static boolean fileExists(String filePath) {
+        if (null == filePath || "".equals(filePath.trim())) {
+            throw new IllegalArgumentException("File Path cannot be Null/Empty");
+        }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            return false;
+        }
+        return true;
     }
 
     public static <E> E fileMeta(String filePath, Converter<E, File> converter) {

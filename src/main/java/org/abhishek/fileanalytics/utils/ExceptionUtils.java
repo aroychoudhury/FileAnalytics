@@ -29,6 +29,10 @@ public class ExceptionUtils {
         PrintWriter pw = new PrintWriter(sw,
             true);
         throwable.printStackTrace(pw);
-        return sw.getBuffer().toString();
+        return sw.getBuffer().toString().replaceAll("\\t", "");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(ExceptionUtils.getStackTrace(new NullPointerException("Hello World")));
     }
 }

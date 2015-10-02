@@ -16,7 +16,7 @@ public class PreProcessLogFileContent extends AbstractProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(PreProcessLogFileContent.class);
 
 	/** Class variables */
-	private FileMetadata metadata = null;
+	protected FileMetadata metadata = null;
 
 	public PreProcessLogFileContent(FileMetadata metadata) {
 		super();

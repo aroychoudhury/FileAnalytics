@@ -30,6 +30,7 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
     private int               positionsCnt       = 0;
     private long[]            lineStartPositions = null;
 
+    private int               maxLineLength      = 0;
     private int               lengthsCnt         = 0;
     private int[]             lineLengths        = null;
 
@@ -89,6 +90,10 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         return endOfLine;
     }
 
+    public int getMaxLineLength() {
+        return maxLineLength;
+    }
+
     public long getLineStartPosition(int index) {
         if (0 > index) {
             throw new IllegalArgumentException("Index cannot be Negative : " + index);
@@ -127,6 +132,10 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         }
         this.lineLengths[this.lengthsCnt] = lineLength;
         this.lengthsCnt++;
+
+        if (this.maxLineLength < lineLength) {
+            this.maxLineLength = lineLength;
+        }
     }
 
     public int lengthsSize() {

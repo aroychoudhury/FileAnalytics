@@ -18,6 +18,6 @@ public class VerifyMatchHelper extends AbstractParseHelper<Boolean> {
 
     @Override
     public Boolean parseInternal(char[] lineData, int startPosn, int endPosn) {
-        return ((endPosn + 1) == this.matcher.search(lineData, startPosn, endPosn)) ? false : true;
+        return this.matcher.matched(lineData, startPosn, endPosn);
     }
 }

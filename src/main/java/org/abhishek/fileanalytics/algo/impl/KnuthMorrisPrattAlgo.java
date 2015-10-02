@@ -76,7 +76,17 @@ public class KnuthMorrisPrattAlgo implements StringMatcher {
      */
 	@Override
     public boolean matched(char[] text, int searchFrom, int searchTo) {
-	    return (this.search(text, searchFrom, searchTo) != searchTo);
+	    int txtLength = text.length;
+
+        if (0 > searchFrom) {
+            searchFrom = 0;
+        }
+        if (0 > searchTo || searchFrom > searchTo) {
+            searchTo = txtLength;
+        } else {
+            searchTo = searchTo + 1;
+        }
+	    return (this.search(text, searchFrom, searchTo) != (searchTo + 1));
 	}
 
 	// test client
@@ -88,10 +98,10 @@ public class KnuthMorrisPrattAlgo implements StringMatcher {
 
 		// substring search
 		StringMatcher kmp = new KnuthMorrisPrattAlgo(pattern.toCharArray());
-		int offset = kmp.search(text.toCharArray(), 20, -10);
+		int offset = kmp.search(text.toCharArray(), 0, 30);
 
 		// print results
-		System.out.println("M = " + M + ", N = " + N + ", offset = " + offset);
+		System.out.println("M = " + M + ", N = " + N + ", position = " + offset + ", match = " + kmp.matched(text.toCharArray(), 0, 30));
 		System.out.println("text:    " + text);
 		System.out.print("pattern: ");
 		for (int i = 0; i < offset; i++)
