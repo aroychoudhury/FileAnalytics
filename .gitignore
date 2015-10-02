@@ -1,0 +1,2 @@
+# For details execute : git help gitignore
+target/**
