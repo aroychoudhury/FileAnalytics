@@ -1,3 +1,5 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.process.impl;
 
 import java.io.File;
@@ -7,22 +9,31 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 import org.abhishek.fileanalytics.dto.persist.FileMetadata;
+import org.abhishek.fileanalytics.exception.ValidationFailureException;
 import org.abhishek.fileanalytics.process.AbstractProcessor;
 import org.abhishek.fileanalytics.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProcessLogFileContent extends AbstractProcessor {
-    private static final Logger logger    = LoggerFactory.getLogger(ProcessLogFileContent.class);
+/**
+ * Base class for providing the all Log File Content parsing.
+ * 
+ * @author abhishek
+ * @since 1.0
+ */
+public class ProcessLogFileContent extends AbstractProcessor<String[]> {
+    private static final Logger logger     = LoggerFactory.getLogger(ProcessLogFileContent.class);
 
     /** Class variables */
-    private int                 startLine       = 0;
-    private int                 endLine         = 0;
-    private FileMetadata        metadata        = null;
-    private String[]            builder         = null;
+    private int                 startLine  = 0;
+    private int                 endLine    = 0;
+    private FileMetadata        metadata   = null;
+    private String[]            builder    = null;
     private int                 insertPosn = 0;
 
-    public ProcessLogFileContent(FileMetadata metadata, int startLine, int endLine) {
+    public ProcessLogFileContent(FileMetadata metadata,
+        int startLine,
+        int endLine) {
         super();
         this.metadata = metadata;
         this.startLine = startLine;
@@ -30,6 +41,11 @@ public class ProcessLogFileContent extends AbstractProcessor {
         this.builder = new String[this.endLine - this.startLine];
     }
 
+    /**
+     * @author abhishek
+     * @since 1.0
+     * @see org.abhishek.fileanalytics.process.Processor#process()
+     */
     @Override
     public void process() {
         logger.debug("metadata : {}", this.metadata);
@@ -53,16 +69,20 @@ public class ProcessLogFileContent extends AbstractProcessor {
 
             // Actual positions
             int lineCnt = this.startLine;
-            //int actualEnd = this.endLine - this.startLine;
+            // int actualEnd = this.endLine - this.startLine;
 
-            logger.info("Setup Information : {} | {} | {} | {}",
+            logger.info(
+                "Setup Information : {} | {} | {} | {}",
                 bufferSize,
                 file,
                 lineCnt,
                 startPosition);
 
             char[] lineChars = new char[this.metadata.getLineLength(lineCnt)];
-            boolean exOccurred = false;
+
+            // Setting default to false, results in this entering if condition
+            // at line number 89.
+            boolean isExecutionSuccess = true;
 
             channel.position(startPosition);
             while (-1 != (channel.read(buffer))) {
@@ -72,29 +92,36 @@ public class ProcessLogFileContent extends AbstractProcessor {
                     byte read = buffer.get();
 
                     char readChar = (char) read;
-                    //lineCharCnt++;
+                    // lineCharCnt++;
                     lineChars[lineCharCnt++] = readChar;
                     if (readChar == endOfLine) {
-                        logger.debug("Parsing information : {} [ {} ] - {} {} - {} {}", 
-                            metadata.getLineLength(lineCnt), metadata.getLineStartPosition(lineCnt), metadata.positionsSize(), metadata.lengthsSize(),
-                            lineCharCnt, lineCnt);
-                        exOccurred = this.execute(lineChars);
+                        logger.debug(
+                            "Parsing information : {} [ {} ] - {} {} - {} {}",
+                            metadata.getLineLength(lineCnt),
+                            metadata.getLineStartPosition(lineCnt),
+                            metadata.positionsSize(),
+                            metadata.lengthsSize(),
+                            lineCharCnt,
+                            lineCnt);
+                        isExecutionSuccess = this.execute(lineChars);
                         lineCharCnt = 0;
                         lineCnt++;
                         lineChars = new char[this.metadata.getLineLength(lineCnt)];
                     }
-                    if (lineCnt == this.endLine || exOccurred) {
+                    if (lineCnt == this.endLine || !isExecutionSuccess) {
                         break;
                     }
                 }
 
                 buffer.clear();
-                if (lineCnt == this.endLine || exOccurred) {
+                if (lineCnt == this.endLine || !isExecutionSuccess) {
                     break;
                 }
             }
         } catch (IOException io) {
-            logger.error("Exception on processing content.", io);
+            logger.error(
+                "Exception on processing content.",
+                io);
         } finally {
             CommonUtils.closeQuietly(channel);
             CommonUtils.closeQuietly(randomAccessFile);
@@ -112,6 +139,28 @@ public class ProcessLogFileContent extends AbstractProcessor {
         super.destroy();
         this.metadata = null;
         this.builder = null;
+    }
+
+    /**
+     * @author abhishek
+     * @since 1.0
+     * @see org.abhishek.fileanalytics.lifecycle.Validatable#validate()
+     */
+    @Override
+    public boolean validate() {
+        if (null == metadata || !metadata.validate()) {
+            throw new ValidationFailureException("Metadata information cannot be NULL.");
+        }
+        if (0 < this.startLine) {
+            throw new ValidationFailureException("Starting Line cannot be negative.");
+        }
+        if (0 < this.endLine) {
+            throw new ValidationFailureException("Ending Line cannot be negative.");
+        }
+        if (this.startLine >= this.endLine) {
+            throw new ValidationFailureException("Ending Line must be less than equals.");
+        }
+        return super.validate();
     }
 
     /**

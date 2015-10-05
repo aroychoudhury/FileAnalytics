@@ -1,9 +1,9 @@
 package org.abhishek.fileanalytics.dto.config;
 
 import org.abhishek.fileanalytics.constants.ConfigTypes;
-import org.abhishek.fileanalytics.dto.Configurable;
-import org.abhishek.fileanalytics.dto.Validatable;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
+import org.abhishek.fileanalytics.lifecycle.Configurable;
+import org.abhishek.fileanalytics.lifecycle.Validatable;
 
 public class Template implements Validatable, Configurable {
     /**
@@ -73,7 +73,7 @@ public class Template implements Validatable, Configurable {
     /**
      * @author abhishek
      * @since 1.0
-     * @see org.abhishek.fileanalytics.dto.Configurable#configurationType()
+     * @see org.abhishek.fileanalytics.lifecycle.Configurable#configurationType()
      */
     @Override
     public ConfigTypes configurationType() {

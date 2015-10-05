@@ -1,3 +1,5 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.utils;
 
 import java.io.File;

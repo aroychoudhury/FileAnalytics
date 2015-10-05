@@ -9,7 +9,8 @@ import java.nio.channels.FileChannel;
 import org.abhishek.fileanalytics.dto.config.Fragment;
 import org.abhishek.fileanalytics.dto.config.Template;
 import org.abhishek.fileanalytics.dto.persist.FileMetadata;
-import org.abhishek.fileanalytics.factory.ParserFactory;
+import org.abhishek.fileanalytics.factory.PreProcesserFactory;
+import org.abhishek.fileanalytics.parse.AbstractParser;
 import org.abhishek.fileanalytics.parse.Parser;
 import org.abhishek.fileanalytics.process.AbstractProcessor;
 import org.abhishek.fileanalytics.utils.CommonUtils;
@@ -79,7 +80,7 @@ public class ProcessLogFileContentOld extends AbstractProcessor {
 						int prevEndPosn = Parser.DEFAULT;
 						for (Fragment fragment : template.getFragments()) {
 							@SuppressWarnings("rawtypes")
-                            Parser parser = ParserFactory.getParser(fragment.getParserClassName());
+                            AbstractParser parser = PreProcesserFactory.getParser(fragment.getParserClassName());
 							logger.debug("Parser class : {}", parser.toString());
 
 							try {

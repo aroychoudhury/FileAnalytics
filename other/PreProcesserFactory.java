@@ -7,21 +7,22 @@ import java.util.Map;
 
 import org.abhishek.fileanalytics.exception.ConfigurationFailureException;
 import org.abhishek.fileanalytics.exception.NoSuchConfigurationException;
+import org.abhishek.fileanalytics.parse.AbstractParser;
 import org.abhishek.fileanalytics.parse.Parser;
 import org.abhishek.fileanalytics.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("rawtypes")
-public class ParserFactory {
-	private static final Logger logger = LoggerFactory.getLogger(ParserFactory.class);
+public class PreProcesserFactory {
+	private static final Logger logger = LoggerFactory.getLogger(PreProcesserFactory.class);
 
 	/* Variables start here */
-	private static final ParserFactory INSTANCE = new ParserFactory();
-	private Map<String, SoftReference<Parser>> parsers = null;
+	private static final PreProcesserFactory INSTANCE = new PreProcesserFactory();
+	private Map<String, SoftReference<AbstractParser>> parsers = null;
 
 	static {
-		INSTANCE.parsers = new HashMap<String, SoftReference<Parser>>();
+		INSTANCE.parsers = new HashMap<String, SoftReference<AbstractParser>>();
 
 		Class[] clazzes = getPackageClasses();
 		if (null != clazzes && 0 < clazzes.length) {
@@ -31,7 +32,7 @@ public class ParserFactory {
 		}
 	}
 
-	private ParserFactory() {
+	private PreProcesserFactory() {
 		super();
 	}
 
@@ -63,9 +64,9 @@ public class ParserFactory {
 		return getParser(clazz.getName());
 	}
 
-	public static Parser getParser(String clazzName) {
+	public static AbstractParser getParser(String clazzName) {
 		if (contains(clazzName)) {
-			SoftReference<Parser> parser = get(clazzName);
+			SoftReference<AbstractParser> parser = get(clazzName);
 			if (null == parser || null == parser.get()) {
 				logger.warn("Parser instance for the key : {} was garbage collected. Creating fresh.", clazzName);
 
@@ -84,12 +85,12 @@ public class ParserFactory {
 	private void add(Class clazz, String clazzName) {
 		synchronized (parsers) {
 			try {
-				Parser parserInst = (Parser) clazz.newInstance();
+			    AbstractParser parserInst = (AbstractParser) clazz.newInstance();
 				parserInst.initialize();
 
 				parsers.put(
 					clazzName, // This is the class name with package
-					new SoftReference<Parser>(parserInst));
+					new SoftReference<AbstractParser>(parserInst));
 			} catch (InstantiationException e) {
 				throw new ConfigurationFailureException("Class instantiation failed for : " + clazz.getName(), e);
 			} catch (IllegalAccessException e) {
@@ -105,7 +106,7 @@ public class ParserFactory {
 		return INSTANCE.parsers.containsKey(clazzName);
 	}
 
-	private static SoftReference<Parser> get(String clazzName) {
+	private static SoftReference<AbstractParser> get(String clazzName) {
 		return INSTANCE.parsers.get(clazzName);
 	}
 

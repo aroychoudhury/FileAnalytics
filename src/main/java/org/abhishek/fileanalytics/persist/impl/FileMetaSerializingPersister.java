@@ -1,3 +1,5 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.persist.impl;
 
 import java.io.File;
@@ -49,7 +51,7 @@ public class FileMetaSerializingPersister extends AbstractPersister<String, File
 		FileInputStream fis = null;
 		ObjectInputStream ois = null;
 		try {
-			fis = new FileInputStream(TMP_DIRECTORY + File.separator + fileName + ".ser");
+			fis = new FileInputStream(TMP_DIRECTORY + File.separator + fileName);
 			ois = new ObjectInputStream(fis);
 			metadata = (FileMetadata) ois.readObject();
 		} catch (Exception ex) {

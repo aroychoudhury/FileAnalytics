@@ -1,7 +1,9 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.persist;
 
-import org.abhishek.fileanalytics.dto.Persistable;
 import org.abhishek.fileanalytics.exception.PersistFailureException;
+import org.abhishek.fileanalytics.lifecycle.Persistable;
 
 public interface Persister<K, V extends Persistable> {
 	boolean isPersistable();

@@ -1,3 +1,5 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.parse.impl;
 
 import org.abhishek.fileanalytics.algo.StringMatcher;
@@ -146,8 +148,8 @@ public class CharacterBasedParser<E> extends AbstractParser<E> {
 
     @Override
     public void destroy() {
-        super.destroy();
         this.startMatcher = null;
         this.endMatcher = null;
+        super.destroy();
     }
 }

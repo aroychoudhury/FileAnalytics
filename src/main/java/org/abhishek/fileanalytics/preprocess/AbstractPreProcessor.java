@@ -1,6 +1,6 @@
 /* Copyright 2015 Roychoudhury, Abhishek */
 
-package org.abhishek.fileanalytics.process;
+package org.abhishek.fileanalytics.preprocess;
 
 import org.abhishek.fileanalytics.lifecycle.AbstractValidater;
 import org.abhishek.fileanalytics.lifecycle.Destroyable;
@@ -8,29 +8,20 @@ import org.abhishek.fileanalytics.lifecycle.Initializable;
 import org.abhishek.fileanalytics.lifecycle.Validatable;
 
 /**
- * This class provides the default implementations for some of the processor
+ * This class provides the default implementations for some of the preprocessor
  * methods.
  * 
- * AbstractProcessor does not provide an implementation for the process method
+ * AbstractPreProcessor does not provide an implementation for the
+ * {@link org.abhishek.fileanalytics.preprocess.PreProcessor#preprocess()} method.
  * 
  * @author abhishek
  * @since 1.0
  */
-public abstract class AbstractProcessor<E> extends AbstractValidater implements Processor<E>, Initializable, Destroyable, Validatable {
-
-    /**
-     * @author abhishek
-     * @since 1.0
-     * @see org.abhishek.fileanalytics.process.Processor#execute(char[])
-     */
-    @Override
-    public boolean execute(char[] lineChars) {
-        return true;
-    }
+public abstract class AbstractPreProcessor<E> extends AbstractValidater implements PreProcessor<E>, Initializable, Destroyable, Validatable {
 
     /**
      * The default implementation of
-     * {@link org.abhishek.fileanalytics.process.Processor#getContent()} returns
+     * {@link org.abhishek.fileanalytics.preprocess.PreProcessor#getContent()} returns
      * a NULL and should hence will need to be checked for NULL by the client.
      * 
      * @author abhishek

@@ -1,3 +1,5 @@
+/* Copyright 2015 Roychoudhury, Abhishek */
+
 package org.abhishek.fileanalytics.dto.persist;
 
 import java.io.Serializable;
@@ -5,10 +7,22 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 import org.abhishek.fileanalytics.constants.PersistTypes;
-import org.abhishek.fileanalytics.dto.Persistable;
-import org.abhishek.fileanalytics.dto.Validatable;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
+import org.abhishek.fileanalytics.lifecycle.Persistable;
+import org.abhishek.fileanalytics.lifecycle.Validatable;
 
+/**
+ * Encpsulates the pre-processed file state.
+ * 
+ * Implements the {@link org.abhishek.fileanalytics.lifecycle.Persistable} interface
+ * indicating how the state needs to be persisted.
+ * 
+ * Implements the {@link org.abhishek.fileanalytics.lifecycle.Validatable} interface
+ * indicating
+ * 
+ * @author abhishek
+ * @since 1.0
+ */
 public class FileMetadata implements Serializable, Validatable, Persistable {
     private static final long serialVersionUID   = 1031384718289501780L;
 
@@ -34,6 +48,24 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
     private int               lengthsCnt         = 0;
     private int[]             lineLengths        = null;
 
+    /**
+     * @param lastModified
+     *            Last file modification date.
+     * @param fileName
+     *            Name of the file.
+     * @param fileExtn
+     *            Extension of the file.
+     * @param filePath
+     *            Path location of the file.
+     * @param charset
+     *            Character set encoding of the file.
+     * @param bufferSize
+     *            Size of the buffer for file read operations.
+     * @param endOfLine
+     *            End of Line character for the file in question.
+     * @author abhishek
+     * @since 1.0
+     */
     private FileMetadata(Date lastModified,
         String fileName,
         String fileExtn,
@@ -58,42 +90,94 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         this.lineLengths = new int[1000];
     }
 
+    /**
+     * @return true if the file is deserialized else return false.
+     * @author abhishek
+     * @since 1.0
+     */
     public boolean isDeserialized() {
         return (0 == this.initType);
     }
 
+    /**
+     * @return The last modified timestamp.
+     * @author abhishek
+     * @since 1.0
+     */
     public Date getLastModified() {
         return lastModified;
     }
 
+    /**
+     * @return The file name.
+     * @author abhishek
+     * @since 1.0
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * @return The file extension.
+     * @author abhishek
+     * @since 1.0
+     */
     public String getFileExtn() {
         return fileExtn;
     }
 
+    /**
+     * @return The file location.
+     * @author abhishek
+     * @since 1.0
+     */
     public String getFilePath() {
         return filePath;
     }
 
+    /**
+     * @return The character set for the file in question.
+     * @author abhishek
+     * @since 1.0
+     */
     public String getCharset() {
         return charset;
     }
 
+    /**
+     * @return The buffer size for the file processing.
+     * @author abhishek
+     * @since 1.0
+     */
     public int getBufferSize() {
         return bufferSize;
     }
 
+    /**
+     * @return The end of line character.
+     * @author abhishek
+     * @since 1.0
+     */
     public char getEndOfLine() {
         return endOfLine;
     }
 
+    /**
+     * @return The maximum number of characters in a line.
+     * @author abhishek
+     * @since 1.0
+     */
     public int getMaxLineLength() {
         return maxLineLength;
     }
 
+    /**
+     * @param index
+     *            The line number for which the information is required.
+     * @return The bytes information for the required line number.
+     * @author abhishek
+     * @since 1.0
+     */
     public long getLineStartPosition(int index) {
         if (0 > index) {
             throw new IllegalArgumentException("Index cannot be Negative : " + index);
@@ -104,6 +188,14 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         return this.lineStartPositions[index - 2];
     }
 
+    /**
+     * @param index
+     *            The line number for which the information is required.
+     * @return The length of character array information for the required line
+     *         number.
+     * @author abhishek
+     * @since 1.0
+     */
     public int getLineLength(int index) {
         if (0 > index) {
             throw new IllegalArgumentException("Index cannot be Negative : " + index);
@@ -114,6 +206,12 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         return this.lineLengths[index - 1];
     }
 
+    /**
+     * @param lineStartPosition
+     *            Byte position to be added to the content bytes array.
+     * @author abhishek
+     * @since 1.0
+     */
     public void addLineStartPosition(Long lineStartPosition) {
         if (0L >= lineStartPosition) {
             throw new IllegalArgumentException("Line Position does not match the criteria : " + lineStartPosition);
@@ -122,10 +220,21 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         this.positionsCnt++;
     }
 
+    /**
+     * @return The length of the content bytes array.
+     * @author abhishek
+     * @since 1.0
+     */
     public int positionsSize() {
         return this.positionsCnt;
     }
 
+    /**
+     * @param lineLength
+     *            Length to be added to the character lengths array.
+     * @author abhishek
+     * @since 1.0
+     */
     public void addLineLength(int lineLength) {
         if (0L >= lineLength) {
             throw new IllegalArgumentException("Line Length does not match the criteria : " + lineLength);
@@ -138,10 +247,20 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         }
     }
 
+    /**
+     * @return The length of the file content bytes array.
+     * @author abhishek
+     * @since 1.0
+     */
     public int lengthsSize() {
         return this.lengthsCnt;
     }
 
+    /**
+     * @author abhishek
+     * @since 1.0
+     * @see org.abhishek.fileanalytics.lifecycle.Validatable#validate()
+     */
     public boolean validate() {
         // lastModified
         if (null == this.lastModified) {
@@ -183,6 +302,12 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
         return true;
     }
 
+    /**
+     * Inner class to for the Builder pattern implementation.
+     * 
+     * @author abhishek
+     * @since 1.0
+     */
     public static class Builder {
         /** Assign defaults */
         private int    bufferSize = 1024 * 4;
@@ -248,7 +373,7 @@ public class FileMetadata implements Serializable, Validatable, Persistable {
     /**
      * @author abhishek
      * @since 1.0
-     * @see org.abhishek.fileanalytics.dto.Persistable#persistType()
+     * @see org.abhishek.fileanalytics.lifecycle.Persistable#persistType()
      */
     @Override
     public PersistTypes persistType() {
