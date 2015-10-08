@@ -2,12 +2,17 @@ package org.abhishek.fileanalytics.parse.helper;
 
 import org.abhishek.fileanalytics.parse.AbstractParseHelper;
 
+/**
+ * @author abhishek
+ * @since  1.0
+ */
 public class ExtractHelper extends AbstractParseHelper<String> {
-    @Override
-    public void initialize() {
-        super.initialize();
-    }
 
+    /**
+     * @author abhishek
+     * @since  1.0
+     * @see org.abhishek.fileanalytics.parse.ParseHelper#parseInternal(char[], int, int)
+     */
     @Override
     public String parseInternal(char[] lineData, int startPosn, int endPosn) {
         StringBuilder builder = new StringBuilder();
@@ -16,4 +21,15 @@ public class ExtractHelper extends AbstractParseHelper<String> {
         }
         return builder.toString();
     }
+
+    /**
+     * @author abhishek
+     * @since  1.0
+     * @see org.abhishek.fileanalytics.parse.ParseHelper#parseEmpty()
+     */
+    @Override
+    public String parseEmpty() {
+        return "";
+    }
+
 }

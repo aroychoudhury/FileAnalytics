@@ -4,7 +4,7 @@ import org.abhishek.fileanalytics.constants.ConfigTypes;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
 import org.abhishek.fileanalytics.lifecycle.Configurable;
 import org.abhishek.fileanalytics.lifecycle.Validatable;
-import org.abhishek.fileanalytics.parse.Parser;
+import org.abhishek.fileanalytics.parse.FragmentParser;
 
 /**
  * TODO
@@ -19,7 +19,7 @@ public class Fragment implements Validatable, Configurable {
     private String parserClassName = null;
 
     @SuppressWarnings("rawtypes")
-    public Fragment(Class<? extends Parser> parserClazz) {
+    public Fragment(Class<? extends FragmentParser> parserClazz) {
         super();
         this.parserClassName = parserClazz.getName();
     }

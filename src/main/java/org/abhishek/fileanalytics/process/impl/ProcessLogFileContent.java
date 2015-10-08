@@ -21,21 +21,19 @@ import org.slf4j.LoggerFactory;
  * @author abhishek
  * @since 1.0
  */
-public class ProcessLogFileContent extends AbstractProcessor<String[]> {
+public class ProcessLogFileContent extends AbstractProcessor<String[], FileMetadata> {
     private static final Logger logger     = LoggerFactory.getLogger(ProcessLogFileContent.class);
 
     /** Class variables */
     private int                 startLine  = 0;
     private int                 endLine    = 0;
-    private FileMetadata        metadata   = null;
-    private String[]            builder    = null;
     private int                 insertPosn = 0;
+    private String[]            builder    = null;
+    protected FileMetadata      metadata   = null;
 
-    public ProcessLogFileContent(FileMetadata metadata,
-        int startLine,
+    public ProcessLogFileContent(int startLine,
         int endLine) {
         super();
-        this.metadata = metadata;
         this.startLine = startLine;
         this.endLine = endLine;
         this.builder = new String[this.endLine - this.startLine];
@@ -151,14 +149,14 @@ public class ProcessLogFileContent extends AbstractProcessor<String[]> {
         if (null == metadata || !metadata.validate()) {
             throw new ValidationFailureException("Metadata information cannot be NULL.");
         }
-        if (0 < this.startLine) {
+        if (0 > this.startLine) {
             throw new ValidationFailureException("Starting Line cannot be negative.");
         }
-        if (0 < this.endLine) {
+        if (0 > this.endLine) {
             throw new ValidationFailureException("Ending Line cannot be negative.");
         }
         if (this.startLine >= this.endLine) {
-            throw new ValidationFailureException("Ending Line must be less than equals.");
+            throw new ValidationFailureException("Ending Line must be greater than Starting Line.");
         }
         return super.validate();
     }
@@ -199,5 +197,15 @@ public class ProcessLogFileContent extends AbstractProcessor<String[]> {
     protected void appendContent(String lineChars) {
         this.builder[this.insertPosn] = lineChars;
         this.insertPosn++;
+    }
+
+    /**
+     * @author abhishek
+     * @since 1.0
+     * @see org.abhishek.fileanalytics.process.AbstractProcessor#setMetadata(java.lang.Object)
+     */
+    @Override
+    public void setMetadata(FileMetadata metadata) {
+        this.metadata = metadata;
     }
 }

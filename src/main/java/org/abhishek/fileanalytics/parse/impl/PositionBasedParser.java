@@ -4,9 +4,9 @@ package org.abhishek.fileanalytics.parse.impl;
 
 import org.abhishek.fileanalytics.exception.ParseFailureException;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
-import org.abhishek.fileanalytics.parse.AbstractParser;
+import org.abhishek.fileanalytics.parse.AbstractFragmentParser;
 
-public class PositionBasedParser<E> extends AbstractParser<E> {
+public class PositionBasedParser<E> extends AbstractFragmentParser<E> {
     /**
      * Fragment start position; this is calculated based on the input character
      * array indices. All lengths are calculated as number of Characters, unless

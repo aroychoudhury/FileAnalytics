@@ -16,7 +16,9 @@ import org.abhishek.fileanalytics.lifecycle.Validatable;
  * @author abhishek
  * @since 1.0
  */
-public abstract class AbstractProcessor<E> extends AbstractValidater implements Processor<E>, Initializable, Destroyable, Validatable {
+public abstract class AbstractProcessor<E, F> 
+                extends AbstractValidater 
+                implements Processor<E, F>, Initializable, Destroyable, Validatable {
 
     /**
      * @author abhishek
@@ -29,9 +31,8 @@ public abstract class AbstractProcessor<E> extends AbstractValidater implements 
     }
 
     /**
-     * The default implementation of
-     * {@link org.abhishek.fileanalytics.process.Processor#getContent()} returns
-     * a NULL and should hence will need to be checked for NULL by the client.
+     * The default implementation returns a NULL and should hence will need to
+     * be checked for NULL by the client.
      * 
      * @author abhishek
      * @since 1.0
@@ -40,6 +41,19 @@ public abstract class AbstractProcessor<E> extends AbstractValidater implements 
     @Override
     public E getContent() {
         return null;
+    }
+
+    /**
+     * The default implementation sets nothing and hence makes this step
+     * optional in the process.
+     * 
+     * @author abhishek
+     * @since 1.0
+     * @see org.abhishek.fileanalytics.process.Processor#setMetadata(java.lang.Object)
+     */
+    @Override
+    public void setMetadata(F metadata) {
+        // set the metadata
     }
 
 }

@@ -6,7 +6,7 @@ import org.abhishek.fileanalytics.lifecycle.Yieldable;
 
 /**
  * Encapsulates the output from the
- * {@link org.abhishek.fileanalytics.parse.Parser} classes.
+ * {@link org.abhishek.fileanalytics.parse.FragmentParser} classes.
  * 
  * @author abhishek
  * @since 1.0

@@ -7,9 +7,9 @@ import org.abhishek.fileanalytics.algo.impl.KnuthMorrisPrattAlgo;
 import org.abhishek.fileanalytics.constants.MatchTypes;
 import org.abhishek.fileanalytics.exception.ParseFailureException;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
-import org.abhishek.fileanalytics.parse.AbstractParser;
+import org.abhishek.fileanalytics.parse.AbstractFragmentParser;
 
-public class CharacterBasedParser<E> extends AbstractParser<E> {
+public class CharacterBasedParser<E> extends AbstractFragmentParser<E> {
     /**
      * Start Separator array indicates that the Fragment has ended. This is
      * probably the best way to track the growing Fragment.
@@ -100,7 +100,12 @@ public class CharacterBasedParser<E> extends AbstractParser<E> {
 
     @Override
     public int calculateEndPosition(char[] lineData, int startPosn) {
-        return this.searchEndMatcher(lineData, (startPosn + 1), DEFAULT) + (this.endSeparatorLen - 1);
+        int endMatch = this.searchEndMatcher(lineData, (startPosn + 1), DEFAULT);
+        if (endMatch == lineData.length) {
+            return endMatch;
+        } else {
+            return endMatch + (this.endSeparatorLen - 1);
+        }
     }
 
     protected int searchDefault(char[] lineData) {

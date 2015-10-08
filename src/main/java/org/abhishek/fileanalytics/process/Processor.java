@@ -14,7 +14,7 @@ package org.abhishek.fileanalytics.process;
  * @param <E>
  *            Placeholder to return any data after the file parsing.
  */
-public interface Processor<E> {
+public interface Processor<E, F> {
 
     /**
      * This method is responsible for the main processing. All implementing
@@ -49,5 +49,16 @@ public interface Processor<E> {
      * @since 1.0
      */
     E getContent();
+
+    /**
+     * Additional data that needs to be set after the class has been initialized
+     * can be use this option.
+     * 
+     * @param metadata
+     *            Metadata that assists in the processing.
+     * @author abhishek
+     * @since 1.0
+     */
+    void setMetadata(F metadata);
 
 }

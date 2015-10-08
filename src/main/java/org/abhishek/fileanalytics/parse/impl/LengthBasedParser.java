@@ -3,9 +3,9 @@
 package org.abhishek.fileanalytics.parse.impl;
 
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
-import org.abhishek.fileanalytics.parse.AbstractParser;
+import org.abhishek.fileanalytics.parse.AbstractFragmentParser;
 
-public class LengthBasedParser<E> extends AbstractParser<E> {
+public class LengthBasedParser<E> extends AbstractFragmentParser<E> {
     /**
      * Minimum Length of the fragment. All lengths are calculated as number of
      * Characters, unless specified.

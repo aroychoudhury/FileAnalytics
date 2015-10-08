@@ -3,19 +3,21 @@ package org.abhishek.fileanalytics.parse;
 import org.abhishek.fileanalytics.dto.yield.ParseResult;
 import org.abhishek.fileanalytics.exception.ParseFailureException;
 import org.abhishek.fileanalytics.exception.ValidationFailureException;
-import org.abhishek.fileanalytics.lifecycle.AbstractInitializer;
+import org.abhishek.fileanalytics.lifecycle.AbstractValidater;
 import org.abhishek.fileanalytics.lifecycle.Destroyable;
 import org.abhishek.fileanalytics.lifecycle.Initializable;
 import org.abhishek.fileanalytics.lifecycle.Validatable;
 
-public abstract class AbstractParser<E> extends AbstractInitializer implements Parser<E>, Initializable, Destroyable, Validatable {
+public abstract class AbstractFragmentParser<E> 
+                extends AbstractValidater 
+                implements FragmentParser<E>, Initializable, Destroyable, Validatable {
     protected boolean              continueOnExc = false;
     private AbstractParseHelper<E> parseHelper   = null;
 
     /**
      * @author abhishek
      * @since 1.0
-     * @see org.abhishek.fileanalytics.parse.Parser#IsContinueOnExc()
+     * @see org.abhishek.fileanalytics.parse.FragmentParser#IsContinueOnExc()
      */
     @Override
     public boolean IsContinueOnExc() {
@@ -25,7 +27,7 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
     /**
      * @author abhishek
      * @since 1.0
-     * @see org.abhishek.fileanalytics.parse.Parser#setContinueOnExc(boolean)
+     * @see org.abhishek.fileanalytics.parse.FragmentParser#setContinueOnExc(boolean)
      */
     @Override
     public void setContinueOnExc(boolean continueOnExc) {
@@ -48,7 +50,7 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
     /**
      * @author abhishek
      * @since  1.0
-     * @see org.abhishek.fileanalytics.parse.Parser#parseFragment(char[], int)
+     * @see org.abhishek.fileanalytics.parse.FragmentParser#parseFragment(char[], int)
      */
     @Override
     public ParseResult<E> parseFragment(char[] lineData,
@@ -63,7 +65,8 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
             lineData,
             startPosn);
 
-        if (startPosn >= endPosn) {
+        // Just being cynical here; if it enters here means I messed it up big time
+        if (startPosn > endPosn) {
             throw new ParseFailureException("Start [" + startPosn + "] must be lesser than End [" + endPosn + "]");
         }
 
@@ -72,11 +75,22 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
             startPosn,
             endPosn);
 
-        // Do whatever action is required to be performed on the data
-        result.setResult(this.executeHelper(
-            lineData,
-            startPosn,
-            endPosn));
+        // Scenario when no match is found
+        if (startPosn == endPosn) {
+            result.setParsedStartPosn(ZERO);
+            result.setParsedEndPosn(ZERO);
+            result.setParsedLength(ZERO);
+
+            // return the default value
+            result.setResult(this.parseHelper.parseEmpty());
+        }
+        else {
+            // Do whatever action is required to be performed on the data
+            result.setResult(this.executeHelper(
+                lineData,
+                startPosn,
+                endPosn));
+        }
 
         return result;
     }
@@ -104,14 +118,14 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
     /**
      * @author abhishek
      * @since  1.0
-     * @see org.abhishek.fileanalytics.lifecycle.Validatable#validate()
+     * @see org.abhishek.fileanalytics.lifecycle.AbstractValidater#validate()
      */
     @Override
     public boolean validate() {
         if (null == this.parseHelper) {
             throw new ValidationFailureException("All Parser classes must have a Helper configured");
         }
-        return true;
+        return super.validate();
     }
 
     protected ParseResult<E> setParseResult(int startPosn,
@@ -120,6 +134,7 @@ public abstract class AbstractParser<E> extends AbstractInitializer implements P
         result.setParsedStartPosn(startPosn);
         result.setParsedEndPosn(endPosn);
         result.setParsedLength(endPosn - startPosn);
+        result.setSuccess(true);
         return result;
     }
 

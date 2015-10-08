@@ -20,7 +20,7 @@ public class AbstractValidater extends AbstractInitializer implements Validatabl
      */
     @Override
     public boolean validate() {
-        return false;
+        return true;
     }
 
 }
